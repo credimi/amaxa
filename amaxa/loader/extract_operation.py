@@ -56,7 +56,7 @@ class ExtractionOperationLoader(OperationLoader):
                 scope = amaxa.ExtractionScope.ALL_RECORDS
             else:
                 scope = amaxa.ExtractionScope.DESCENDENTS
-
+                
             field_scope = self._get_field_scope(entry)
             field_scope.add("Id")
 
