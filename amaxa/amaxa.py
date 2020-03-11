@@ -6,7 +6,6 @@ from enum import Enum, unique
 from traceback import format_exception
 
 
-
 @unique
 class StringEnum(Enum):
     @classmethod
@@ -586,7 +585,6 @@ class ExtractOperation(Operation):
                     len(self.get_extracted_ids(s.sobjectname)),
                     "s" if len(self.get_extracted_ids(s.sobjectname)) != 1 else "",
                 )
-    
         return 0
 
     def add_dependency(self, sobjectname, id):
