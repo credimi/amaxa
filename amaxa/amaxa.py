@@ -111,9 +111,6 @@ class FileStore(object):
         for f in self.store.values():
             f.close()
 
-def _format_traceback(exception):
-    return "".join(format_exception(type(exception), exception, exception.__traceback__))
-
 class Operation(object):
     def __init__(self, connection):
         self.steps = []
@@ -878,3 +875,6 @@ class DataMapper(object):
 
     def transform_value(self, k, v):
         return functools.reduce(lambda x, f: f(x), self.field_transforms.get(k, []), v)
+
+def _format_traceback(exception):
+    return "".join(format_exception(type(exception), exception, exception.__traceback__))
