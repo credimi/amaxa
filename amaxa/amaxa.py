@@ -3,6 +3,7 @@ import logging
 import csv
 from . import constants
 from enum import Enum, unique
+from traceback import format_exception
 
 
 @unique
@@ -110,7 +111,6 @@ class FileStore(object):
         for f in self.store.values():
             f.close()
 
-
 class Operation(object):
     def __init__(self, connection):
         self.steps = []
@@ -128,7 +128,7 @@ class Operation(object):
             self.initialize()
             return self.execute()
         except Exception as e:
-            self.logger.error("Unexpected exception {} occurred.".format(str(e)))
+            self.logger.error("Unexpected exception {} occurred.".format(_format_traceback(e)))
             return -1
         finally:
             self.file_store.close()
@@ -284,7 +284,6 @@ class LoadOperation(Operation):
             for s in self.steps:
                 self.logger.info("%s: starting load", s.sobjectname)
                 s.execute()
-
                 # After each step, check whether errors happened and stop the process.
                 if not self.success:
                     self.logger.error(
@@ -583,7 +582,6 @@ class ExtractOperation(Operation):
                     len(self.get_extracted_ids(s.sobjectname)),
                     "s" if len(self.get_extracted_ids(s.sobjectname)) != 1 else "",
                 )
-
         return 0
 
     def add_dependency(self, sobjectname, id):
@@ -877,3 +875,6 @@ class DataMapper(object):
 
     def transform_value(self, k, v):
         return functools.reduce(lambda x, f: f(x), self.field_transforms.get(k, []), v)
+
+def _format_traceback(exception):
+    return "".join(format_exception(type(exception), exception, exception.__traceback__))
